@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<title>Google Sign In Auth</title>
+<body>
+  <img src="http://localhost:3000/imagen/usuarios/5db2bde37f3ba3018cf49832-579.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7InJvbCI6IkFETUlOX1JPTCIsImVzdGFkbyI6dHJ1ZSwiZ29vZ2xlIjpmYWxzZSwiX2lkIjoiNWRiMmJkZTM3ZjNiYTMwMThjZjQ5ODMyIiwibm9tYnJlIjoiVXN1YXJpbzIwIiwiZW1haWwiOiJ1c3VhcmlvMjBAZ21haWwuY29tIiwiX192IjowfSwiaWF0IjoxNTcyMDg5NTAyLCJleHAiOjE1NzIyNjIzMDJ9.TnDUMDXETFKU5SVf8EjkW_zk53bsJ_n7sN-J02meMW8" alt="">
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <a href="#" onclick="signOut();">Sign out</a>
+</body>
+</html>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="919627314730-sf3t45285bbgbkffm0f7eti2dg9sme9c.apps.googleusercontent.com">
+
+<script>
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      console.log('User signed out.');
+    });
+  }
+</script>
+<script>
+    
+function onSignIn(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+  console.log('Name: ' + profile.getName());
+  console.log('Image URL: ' + profile.getImageUrl());
+  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+    var id_token = googleUser.getAuthResponse().id_token;
+    console.log(id_token);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/google');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onload = function() {
+    console.log('Signed in as: ' + xhr.responseText);
+    };
+    xhr.send('idtoken=' + id_token);
+
+}
+</script>
